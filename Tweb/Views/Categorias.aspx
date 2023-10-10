@@ -5,16 +5,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Categorias</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="../CSS/style.css" />
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
 
+
+
+    <link rel="stylesheet" type="text/css" href="../CSS/style.css" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
 
     <script src="../Scripts/AgregarCategoria.js"></script>
     <script src="../Scripts/CargarCategorias.js"></script>
@@ -93,5 +95,21 @@
             </asp:Table>
         </div>
     </form>
+    <script type="text/javascript">
+    function verificarSeleccion(button) {
+        // Encuentra el checkbox correspondiente en la misma fila
+        var checkbox = $(button).closest("tr").find("input[type=checkbox]");
+        
+        if (checkbox.prop("checked")) {
+            // El checkbox está marcado, realiza la eliminación del registro aquí
+            return true; // Continúa con la acción del botón (eliminación)
+        } else {
+            // El checkbox no está marcado, muestra el modal de advertencia
+            $('#modalAdvertencia').modal('show');
+            return false; // Detén la acción del botón (no elimines)
+        }
+    }
+    </script>t>
+
 </body>
 </html>

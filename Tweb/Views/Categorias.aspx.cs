@@ -10,6 +10,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
+
 namespace Tweb.Views
 {
     public partial class Categorias : Page
@@ -67,8 +68,11 @@ namespace Tweb.Views
 
                     Button btnEliminar = new Button();
                     btnEliminar.Text = "Eliminar";
-                    btnEliminar.CssClass = "dropdown-item";
-                    btnEliminar.CssClass = "btn btn-danger";
+                    btnEliminar.CssClass = "dropdown-item btn btn-danger";
+                    // Agregar el atributo data-id al botón
+                    btnEliminar.Attributes.Add("data-id", categoria.CategoriaID.ToString());
+                    btnEliminar.OnClientClick = "return verificarSeleccion(this);"; // Llama a la función JavaScript
+
 
 
                     Button btnModificar = new Button();

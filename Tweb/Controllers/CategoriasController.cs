@@ -83,12 +83,12 @@ namespace Tweb.Controllers
         }
 
         [HttpDelete]
-        [Route("api/Categorias/EliminarCategoria/{nombre}")]
-        public IHttpActionResult EliminarCategoria(string nombre)
+        [Route("api/Categorias/EliminarCategoria/{id}")]
+        public IHttpActionResult EliminarCategoria(int id)
         {
             try
             {
-                var categoriaExistente = Categ.Categorias.FirstOrDefault(c => c.Nombre == nombre);
+                var categoriaExistente = Categ.Categorias.FirstOrDefault(c => c.CategoriaID == id);
 
                 if (categoriaExistente == null)
                 {
@@ -98,13 +98,14 @@ namespace Tweb.Controllers
                 Categ.Categorias.Remove(categoriaExistente);
                 Categ.SaveChanges();
 
-                return Ok("R");
+                return Ok();
             }
             catch (Exception)
             {
                 return InternalServerError();
             }
         }
+
         [HttpGet]
         [Route("api/Categorias/ObtenerCategorias")]
         public IHttpActionResult ObtenerCategorias()
