@@ -175,6 +175,7 @@
     <Content Include="Scripts\AgregarCategoria.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\CargarCategorias.js" />
     <Content Include="Scripts\Categorias.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -205,7 +206,6 @@
     <Content Include="Site.Master" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Views\Categorias.aspx" />
-    <Content Include="Views\RegistrarC.aspx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
     <Content Include="Site.Mobile.Master" />
@@ -273,13 +273,6 @@
     </Compile>
     <Compile Include="Views\Categorias.aspx.designer.cs">
       <DependentUpon>Categorias.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\RegistrarC.aspx.cs">
-      <DependentUpon>RegistrarC.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\RegistrarC.aspx.designer.cs">
-      <DependentUpon>RegistrarC.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

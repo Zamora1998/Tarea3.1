@@ -22,11 +22,6 @@ namespace Tweb.Views
         }
         protected void btnvalidarInput(object sender, EventArgs e)
         {
-   
-
-            string nombre = txtInputregistrar.Text;
-            EnviarCategoriaAlAPI(nombre);
-
         }
 
         protected async void Page_Load(object sender, EventArgs e)
@@ -36,43 +31,17 @@ namespace Tweb.Views
 
                 List<Categoria> listaDeCategorias = await ObtenerCategoriasDesdeAPI();
                 listaDeCategorias.Sort((a, b) => string.Compare(a.Nombre, b.Nombre));
-
                 foreach (var categoria in listaDeCategorias)
                 {
                     TableRow row = new TableRow();
+                    row.CssClass = "align-middle";
                     TableCell cellId = new TableCell();
-                    TableCell cellNombre = new TableCell();
-                    TableCell cellAcciones = new TableCell();
-
+                    cellId.CssClass = "text-center"; 
                     cellId.Text = categoria.CategoriaID.ToString();
+                    TableCell cellNombre = new TableCell();
+                    cellNombre.CssClass = "text-center";
                     cellNombre.Text = categoria.Nombre;
-
-                    // Agrega un botón de "Acciones" con un menú desplegable
-                    Button accionesButton = new Button();
-                    accionesButton.Text = "Acciones";
-                    accionesButton.CssClass = "acciones-btn";
-                    accionesButton.Attributes.Add("onclick", $"mostrarMenuDesplegable({categoria.CategoriaID})");
-
-                    // Crea el menú desplegable
-                    var dropdownDiv = new HtmlGenericControl("div");
-                    dropdownDiv.Attributes.Add("class", "dropdown-content");
-
-                    // Agrega el botón "Modificar" al menú desplegable
-                    var modificarButton = new Button();
-                    modificarButton.Text = "Modificar";
-                    modificarButton.Attributes.Add("onclick", $"editarCategoria({categoria.CategoriaID})");
-                    dropdownDiv.Controls.Add(modificarButton);
-
-                    // Agrega el botón "Eliminar" al menú desplegable
-                    var eliminarButton = new Button();
-                    eliminarButton.Text = "Eliminar";
-                    eliminarButton.Attributes.Add("onclick", $"eliminarCategoria({categoria.CategoriaID})");
-                    dropdownDiv.Controls.Add(eliminarButton);
-
-                    // Agrega el menú desplegable al cell de "Acciones"
-                    cellAcciones.Controls.Add(accionesButton);
-                    cellAcciones.Controls.Add(dropdownDiv);
-
+                    TableCell cellAcciones = new TableCell();
                     row.Cells.Add(cellId);
                     row.Cells.Add(cellNombre);
                     row.Cells.Add(cellAcciones);
@@ -82,32 +51,6 @@ namespace Tweb.Views
 
             }
         }
-
-        private HttpStatusCode EnviarCategoriaAlAPI(string nombre)
-        {
-            try
-            {
-                string apiUrl = "http://localhost:50912/api/Categorias/AgregarCategoria";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                byte[] data = Encoding.UTF8.GetBytes("{\"Nombre\":\"" + nombre + "\"}");
-                request.ContentLength = data.Length;
-
-                using (Stream stream = request.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                return response.StatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error al enviar la categoría al API: " + ex.Message);
-                return HttpStatusCode.InternalServerError; 
-            }
-        }
-
 
         private async Task<List<Categoria>> ObtenerCategoriasDesdeAPI()
         {

@@ -22,3 +22,26 @@ button {
     cursor: pointer;
 }
 
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.align-middle {
+    vertical-align: middle !important;
+}
+.text-center {
+    text-align: center;
+}
+
+
+
+.miBotonVerde {
+    background-color: green;
+    color: white;
+    border-radius: 10px; /* Ajusta el valor según la cantidad de redondeo que desees */
+
+}
+
+.navbar-title {
+    margin-left: 0; /* Alinea el título a la derecha de la barra de navegación */
+}
