@@ -35,13 +35,54 @@ namespace Tweb.Views
                 {
                     TableRow row = new TableRow();
                     row.CssClass = "align-middle";
+
+                    TableCell cellCheck = new TableCell();
+                    cellCheck.CssClass = "text-center";
+
+                    // Crear un control de checkbox
+                    CheckBox checkbox = new CheckBox();
+                    //checkbox.ID = "chkCategoria_" + categoria.CategoriaID; // Asigna un ID único
+                    cellCheck.Controls.Add(checkbox);
+
                     TableCell cellId = new TableCell();
-                    cellId.CssClass = "text-center"; 
+                    cellId.CssClass = "text-center";
                     cellId.Text = categoria.CategoriaID.ToString();
+
                     TableCell cellNombre = new TableCell();
                     cellNombre.CssClass = "text-center";
                     cellNombre.Text = categoria.Nombre;
+
                     TableCell cellAcciones = new TableCell();
+                    cellAcciones.CssClass = "text-center"; 
+
+                    Button btnAcciones = new Button();
+                    btnAcciones.Text = "Acciones";
+                    btnAcciones.CssClass = "btn btn-primary";
+                    btnAcciones.Attributes.Add("data-toggle", "dropdown"); 
+                    btnAcciones.Attributes.Add("aria-haspopup", "true");
+                    btnAcciones.Attributes.Add("aria-expanded", "false");
+
+                    HtmlGenericControl dropdownMenu = new HtmlGenericControl("div");
+                    dropdownMenu.Attributes.Add("class", "dropdown-menu");
+
+                    Button btnEliminar = new Button();
+                    btnEliminar.Text = "Eliminar";
+                    btnEliminar.CssClass = "dropdown-item";
+                    btnEliminar.CssClass = "btn btn-danger";
+
+
+                    Button btnModificar = new Button();
+                    btnModificar.Text = "Modificar";
+                    btnModificar.CssClass = "dropdown-item";
+                    btnModificar.CssClass = "btn btn-warning";
+
+
+                    dropdownMenu.Controls.Add(btnEliminar);
+                    dropdownMenu.Controls.Add(btnModificar);
+
+                    cellAcciones.Controls.Add(btnAcciones);
+                    cellAcciones.Controls.Add(dropdownMenu);
+                    row.Cells.Add(cellCheck);
                     row.Cells.Add(cellId);
                     row.Cells.Add(cellNombre);
                     row.Cells.Add(cellAcciones);
@@ -51,6 +92,8 @@ namespace Tweb.Views
 
             }
         }
+ 
+
 
         private async Task<List<Categoria>> ObtenerCategoriasDesdeAPI()
         {

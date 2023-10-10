@@ -51,6 +51,15 @@ namespace Tweb.Views
         protected global::System.Web.UI.WebControls.TextBox txtInputregistrar;
 
         /// <summary>
+        /// modalAdvertencia control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl modalAdvertencia;
+
+        /// <summary>
         /// tablaCategorias control.
         /// </summary>
         /// <remarks>
