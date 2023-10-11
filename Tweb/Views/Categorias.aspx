@@ -114,6 +114,7 @@
                         <label for="txtNombre">Nombre:</label>
                         <input type="hidden" id="nombreActual" />
                         <input type="text" id="txtinputNombre" class="form-control" placeholder="Ingrese el nuevo nombre de la Categoría" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras, espacios y tildes/ñ" />
+                         <span id="errorEditar" style="color: red;"></span> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -196,11 +197,9 @@
                                     });
                                 } else {
                                     console.error('Error al eliminar la categoría');
-                                    // Puedes mostrar un mensaje de error si es necesario
                                 }
                             };
                         } else {
-                            // Mostrar el modal de advertencia si no se ha seleccionado una casilla
                             $('#modalAdvertencia').modal('show');
                         }
 
