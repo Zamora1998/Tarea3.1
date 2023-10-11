@@ -5,9 +5,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Categorias</title>
-
-
-
     <link rel="stylesheet" type="text/css" href="../CSS/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -17,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
     <script src="../Scripts/AgregarCategoria.js"></script>
     <script src="../Scripts/CargarCategorias.js"></script>
+    <script src="../Scripts/CargarCategoriasnuevas.js"></script>
 
 </head>
 <body>
@@ -82,6 +80,26 @@
                     </div>
                 </div>
             </div>
+            <div id="modalConfirmacion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalConfirmacionLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que deseas eliminar la categoría con ID: <span id="categoriaId"></span>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" id="btnConfirmarEliminar" class="btn btn-danger">Sí, Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
             <asp:Table ID="tablaCategorias" runat="server" BorderWidth="1" CssClass="table table-bordered table-striped">
                 <asp:TableHeaderRow>
                     <asp:TableHeaderCell CssClass="text-center">Check</asp:TableHeaderCell>
@@ -92,21 +110,124 @@
             </asp:Table>
         </div>
     </form>
-    <script type="text/javascript">
-    function verificarSeleccion(button) {
-        // Encuentra el checkbox correspondiente en la misma fila
-        var checkbox = $(button).closest("tr").find("input[type=checkbox]");
-        
-        if (checkbox.prop("checked")) {
-            // El checkbox está marcado, realiza la eliminación del registro aquí
-            return true; // Continúa con la acción del botón (eliminación)
-        } else {
-            // El checkbox no está marcado, muestra el modal de advertencia
-            $('#modalAdvertencia').modal('show');
-            return false; // Detén la acción del botón (no elimines)
+<script>
+    // Función para cargar datos desde la API y actualizar la tabla
+    async function cargarDatosDesdeAPI() {
+        try {
+            const response = await fetch('http://localhost:50912/api/Categorias/ObtenerCategorias');
+            if (response.ok) {
+                const data = await response.json();
+                const tabla = document.getElementById('tablaCategorias');
+                const tbody = tabla.createTBody();
+
+                // Ordenar los datos por Nombre alfabéticamente
+                data.sort((a, b) => a.Nombre.localeCompare(b.Nombre));
+
+                data.forEach(categoria => {
+                    const row = tbody.insertRow();
+
+                    // Agregar una casilla de verificación
+                    const cellCheck = row.insertCell();
+                    cellCheck.classList.add('text-center');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    cellCheck.appendChild(checkbox);
+
+                    // Agregar la ID
+                    const cellId = row.insertCell();
+                    cellId.classList.add('text-center');
+                    cellId.textContent = categoria.CategoriaID;
+
+                    // Agregar el Nombre
+                    const cellNombre = row.insertCell();
+                    cellNombre.classList.add('text-center');
+                    cellNombre.textContent = categoria.Nombre;
+
+                    // Agregar el botón "Acciones"
+                    const cellAcciones = row.insertCell();
+                    cellAcciones.classList.add('text-center');
+                    const btnAcciones = document.createElement('button');
+                    btnAcciones.textContent = 'Acciones';
+                    btnAcciones.classList.add('btn', 'btn-primary');
+                    btnAcciones.type = 'button'; // Evitar recarga de la página
+
+                    // Crear un div contenedor para los botones de "Eliminar" y "Modificar"
+                    const divBotones = document.createElement('div');
+                    divBotones.style.display = 'none'; // Cambiado a 'none' para que estén ocultos inicialmente
+                    divBotones.classList.add('dropdown'); // Agregar la clase para el menú desplegable
+
+                    // Agregar botón "Acciones" como el botón principal del menú desplegable
+                    const btnAccionesDropdown = document.createElement('button');
+                    btnAccionesDropdown.textContent = 'Acciones';
+                    btnAccionesDropdown.classList.add('btn', 'btn-primary', 'dropdown-toggle');
+                    btnAccionesDropdown.type = 'button';
+                    btnAccionesDropdown.setAttribute('data-toggle', 'dropdown'); // Habilitar el menú desplegable
+
+                    // Crear un div para el menú desplegable
+                    const divDropdown = document.createElement('div');
+                    divDropdown.classList.add('dropdown-menu');
+
+                    // Agregar botón de "Eliminar" al menú desplegable
+                    const btnEliminar = document.createElement('button');
+                    btnEliminar.textContent = 'Eliminar';
+                    btnEliminar.classList.add('btn', 'btn-danger');
+                    btnEliminar.type = 'button'; // Evitar recarga de la página
+                    btnEliminar.onclick = (event) => {
+                        // Lógica para eliminar
+                        event.stopPropagation(); // Detener la propagación del evento
+                        const id = categoria.CategoriaID;
+                        // Agrega aquí tu lógica para eliminar el registro con la ID 'id'
+                        return false; // Evitar recarga de la página
+                    };
+
+                    // Agregar botón de "Modificar" al menú desplegable
+                    const btnModificar = document.createElement('button');
+                    btnModificar.textContent = 'Modificar';
+                    btnModificar.classList.add('btn', 'btn-warning');
+                    btnModificar.type = 'button'; // Evitar recarga de la página
+                    btnModificar.onclick = (event) => {
+                        // Lógica para modificar
+                        event.stopPropagation(); // Detener la propagación del evento
+                        const id = categoria.CategoriaID;
+                        // Agrega aquí tu lógica para modificar el registro con la ID 'id'
+                        return false; // Evitar recarga de la página
+                    };
+
+                    // Agregar botones al menú desplegable
+                    divDropdown.appendChild(btnEliminar);
+                    divDropdown.appendChild(btnModificar);
+
+                    // Agregar el botón "Acciones" al div de botones
+                    divBotones.appendChild(btnAccionesDropdown);
+                    divBotones.appendChild(divDropdown);
+
+                    // Agregar el div de botones a la celda de Acciones
+                    cellAcciones.appendChild(divBotones);
+
+                    // Evento click del botón "Acciones" para mostrar/ocultar el menú desplegable
+                    btnAccionesDropdown.onclick = (event) => {
+                        event.stopPropagation(); // Detener la propagación del evento
+                        if (divDropdown.style.display === 'none') {
+                            divDropdown.style.display = 'block';
+                        } else {
+                            divDropdown.style.display = 'none';
+                        }
+                        return false; // Evitar recarga de la página
+                    };
+                });
+            } else {
+                console.error('Error al cargar datos desde la API');
+            }
+        } catch (error) {
+            console.error('Error inesperado: ' + error.message);
         }
     }
-    </script>t>
+
+    // Llamar a la función para cargar datos al cargar la página
+    cargarDatosDesdeAPI();
+
+</script>
+
 
 </body>
 </html>

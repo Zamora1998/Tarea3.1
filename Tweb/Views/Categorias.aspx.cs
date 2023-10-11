@@ -27,6 +27,7 @@ namespace Tweb.Views
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            /*
             if (!IsPostBack)
             {
 
@@ -54,12 +55,12 @@ namespace Tweb.Views
                     cellNombre.Text = categoria.Nombre;
 
                     TableCell cellAcciones = new TableCell();
-                    cellAcciones.CssClass = "text-center"; 
+                    cellAcciones.CssClass = "text-center";
 
                     Button btnAcciones = new Button();
                     btnAcciones.Text = "Acciones";
                     btnAcciones.CssClass = "btn btn-primary";
-                    btnAcciones.Attributes.Add("data-toggle", "dropdown"); 
+                    btnAcciones.Attributes.Add("data-toggle", "dropdown");
                     btnAcciones.Attributes.Add("aria-haspopup", "true");
                     btnAcciones.Attributes.Add("aria-expanded", "false");
 
@@ -92,37 +93,41 @@ namespace Tweb.Views
                     row.Cells.Add(cellAcciones);
 
                     tablaCategorias.Rows.Add(row);
+
                 }
 
             }
+            */
         }
- 
+        /*
 
 
-        private async Task<List<Categoria>> ObtenerCategoriasDesdeAPI()
-        {
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    string apiUrl = "http://localhost:50912/api/Categorias/ObtenerCategorias";
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+               private async Task<List<Categoria>> ObtenerCategoriasDesdeAPI()
+               {
+                   try
+                   {
+                       using (HttpClient client = new HttpClient())
+                       {
+                           string apiUrl = "http://localhost:50912/api/Categorias/ObtenerCategorias";
+                           HttpResponseMessage response = await client.GetAsync(apiUrl);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        List<Categoria> categorias = await response.Content.ReadAsAsync<List<Categoria>>();
-                        return categorias;
-                    }
-                    else
-                    {
-                        return new List<Categoria>();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return new List<Categoria>();
-            }
-        }
+                           if (response.IsSuccessStatusCode)
+                           {
+                               List<Categoria> categorias = await response.Content.ReadAsAsync<List<Categoria>>();
+                               return categorias;
+                           }
+                           else
+                           {
+                               return new List<Categoria>();
+                           }
+                       }
+                   }
+                   catch (Exception ex)
+                   {
+                       return new List<Categoria>();
+                   }
+               }
+           }
+        */
     }
 }
