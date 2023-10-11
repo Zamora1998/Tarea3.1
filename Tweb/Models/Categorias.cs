@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Tweb.Models
 {
-    public class Categoriasclass
+    public class Categoriasclasso
     {
         public string Nombre { get; set; }
     }

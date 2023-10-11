@@ -22,7 +22,7 @@ namespace Tweb.Controllers
 
         [HttpPost]
         [Route("api/Categorias/AgregarCategoria")]
-        public IHttpActionResult AgregarCategoria(Categoriasclass nuevaCategoria)
+        public IHttpActionResult AgregarCategoria(Categoriasclasso nuevaCategoria)
         {
             try
             {
@@ -50,26 +50,27 @@ namespace Tweb.Controllers
                 return InternalServerError();
             }
         }
-
         [HttpPut]
-        [Route("api/Categorias/EditarCategoria/{nombre}")]
-        public IHttpActionResult EditarCategoria(string nombre, Categoria categoriaEditada)
+        [Route("api/Categorias/EditarCategoria")]
+        public IHttpActionResult EditarCategoria([FromUri] string nombreActual, [FromBody] Categoriasclasso categoriaEditada)
         {
             try
             {
-                var categoriaExistente = Categ.Categorias.FirstOrDefault(c => c.Nombre == nombre);
+                var categoriaExistente = Categ.Categorias.FirstOrDefault(c => c.Nombre == nombreActual);
 
                 if (categoriaExistente == null)
                 {
                     return NotFound();
                 }
-                var otraCategoriaMismoNombre = Categ.Categorias.FirstOrDefault(c => c.Nombre == categoriaEditada.Nombre && c.Nombre != nombre);
 
-                if (otraCategoriaMismoNombre != null)
+                var otroCategoriaMismoNombre = Categ.Categorias.FirstOrDefault(c => c.Nombre == categoriaEditada.Nombre && c.Nombre != nombreActual);
+
+                if (otroCategoriaMismoNombre != null)
                 {
                     return Conflict();
                 }
 
+                // Actualiza el nombre de la categoría con el nuevo nombre recibido en el JSON
                 categoriaExistente.Nombre = categoriaEditada.Nombre;
 
                 Categ.SaveChanges();
@@ -81,6 +82,8 @@ namespace Tweb.Controllers
                 return InternalServerError();
             }
         }
+
+
 
         [HttpDelete]
         [Route("api/Categorias/EliminarCategoria/{id}")]

@@ -176,7 +176,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CargarCategorias.js" />
-    <Content Include="Scripts\CargarCategoriasnuevas.js" />
     <Content Include="Scripts\Categorias.js" />
     <Content Include="Scripts\EliminarCategoria.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

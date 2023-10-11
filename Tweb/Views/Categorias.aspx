@@ -72,7 +72,7 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <p>Debe seleccionar un registro para poder eliminar.</p>
+                            <p>Debe seleccionar un registro para poder eliminar o modificar.</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
@@ -99,6 +99,30 @@
                 </div>
             </div>
         </div>
+        <!-- Modal para Modificar Registro -->
+        <div class="modal fade" id="modalModificar" tabindex="-1" role="dialog" aria-labelledby="modalModificarLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalModificarLabel">Modificar Categoría</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>ID de Categoría: <span id="modalCategoriaID"></span></p>
+                        <label for="txtNombre">Nombre:</label>
+                        <input type="hidden" id="nombreActual" />
+                        <input type="text" id="txtinputNombre" class="form-control" placeholder="Ingrese el nuevo nombre de la Categoría" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras, espacios y tildes/ñ" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btnAceptarModificar">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
             <asp:Table ID="tablaCategorias" runat="server" BorderWidth="1" CssClass="table table-bordered table-striped">
                 <asp:TableHeaderRow>
@@ -111,7 +135,6 @@
         </div>
     </form>
 <script>
-    // Función para cargar datos desde la API y actualizar la tabla
     async function cargarDatosDesdeAPI() {
         try {
             const response = await fetch('http://localhost:50912/api/Categorias/ObtenerCategorias');
@@ -120,100 +143,129 @@
                 const tabla = document.getElementById('tablaCategorias');
                 const tbody = tabla.createTBody();
 
-                // Ordenar los datos por Nombre alfabéticamente
                 data.sort((a, b) => a.Nombre.localeCompare(b.Nombre));
 
                 data.forEach(categoria => {
                     const row = tbody.insertRow();
 
-                    // Agregar una casilla de verificación
                     const cellCheck = row.insertCell();
                     cellCheck.classList.add('text-center');
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     cellCheck.appendChild(checkbox);
 
-                    // Agregar la ID
                     const cellId = row.insertCell();
                     cellId.classList.add('text-center');
                     cellId.textContent = categoria.CategoriaID;
-
-                    // Agregar el Nombre
                     const cellNombre = row.insertCell();
                     cellNombre.classList.add('text-center');
                     cellNombre.textContent = categoria.Nombre;
 
-                    // Agregar el botón "Acciones"
                     const cellAcciones = row.insertCell();
                     cellAcciones.classList.add('text-center');
-                    const btnAcciones = document.createElement('button');
-                    btnAcciones.textContent = 'Acciones';
-                    btnAcciones.classList.add('btn', 'btn-primary');
-                    btnAcciones.type = 'button'; // Evitar recarga de la página
 
-                    // Crear un div contenedor para los botones de "Eliminar" y "Modificar"
-                    const divBotones = document.createElement('div');
-                    divBotones.style.display = 'none'; // Cambiado a 'none' para que estén ocultos inicialmente
-                    divBotones.classList.add('dropdown'); // Agregar la clase para el menú desplegable
-
-                    // Agregar botón "Acciones" como el botón principal del menú desplegable
-                    const btnAccionesDropdown = document.createElement('button');
-                    btnAccionesDropdown.textContent = 'Acciones';
-                    btnAccionesDropdown.classList.add('btn', 'btn-primary', 'dropdown-toggle');
-                    btnAccionesDropdown.type = 'button';
-                    btnAccionesDropdown.setAttribute('data-toggle', 'dropdown'); // Habilitar el menú desplegable
-
-                    // Crear un div para el menú desplegable
-                    const divDropdown = document.createElement('div');
-                    divDropdown.classList.add('dropdown-menu');
-
-                    // Agregar botón de "Eliminar" al menú desplegable
                     const btnEliminar = document.createElement('button');
                     btnEliminar.textContent = 'Eliminar';
                     btnEliminar.classList.add('btn', 'btn-danger');
-                    btnEliminar.type = 'button'; // Evitar recarga de la página
+                    btnEliminar.type = 'button';
                     btnEliminar.onclick = (event) => {
-                        // Lógica para eliminar
-                        event.stopPropagation(); // Detener la propagación del evento
-                        const id = categoria.CategoriaID;
-                        // Agrega aquí tu lógica para eliminar el registro con la ID 'id'
-                        return false; // Evitar recarga de la página
-                    };
+                        event.stopPropagation();
 
-                    // Agregar botón de "Modificar" al menú desplegable
+                        // Verificar si se ha seleccionado alguna casilla de verificación
+                        const row = event.target.closest('tr');
+                        const checkbox = row.querySelector('input[type="checkbox"]');
+
+                        if (checkbox && checkbox.checked) {
+                            // Mostrar el modal de confirmación si se ha seleccionado una casilla
+                            const id = categoria.CategoriaID;
+                            $('#modalConfirmacion').modal('show');
+
+                            // Configurar el manejador del botón "Sí, Eliminar" en el modal de confirmación
+                            document.getElementById('btnConfirmarEliminar').onclick = async () => {
+                                // Realizar la solicitud para eliminar la categoría
+                                const response = await fetch(`http://localhost:50912/api/Categorias/EliminarCategoria/${id}`, {
+                                    method: 'DELETE'
+                                });
+
+                                if (response.status === 200) {
+                                    // Si la solicitud es exitosa, cierra el modal de confirmación suavemente
+                                    $('#modalConfirmacion').modal('hide');
+                                    $('#modalConfirmacion').on('hidden.bs.modal', function () {
+                                        // Puedes recargar la página o realizar otras acciones después de eliminar
+                                        window.location.reload(); // Recargar la página
+                                    });
+                                } else {
+                                    console.error('Error al eliminar la categoría');
+                                    // Puedes mostrar un mensaje de error si es necesario
+                                }
+                            };
+                        } else {
+                            // Mostrar el modal de advertencia si no se ha seleccionado una casilla
+                            $('#modalAdvertencia').modal('show');
+                        }
+
+                        return false;
+                    };
+                    cellAcciones.appendChild(btnEliminar);
+
+                    // Agregar el botón "Modificar"
                     const btnModificar = document.createElement('button');
                     btnModificar.textContent = 'Modificar';
-                    btnModificar.classList.add('btn', 'btn-warning');
-                    btnModificar.type = 'button'; // Evitar recarga de la página
+                    btnModificar.classList.add('btn', 'btn-warning', 'ml-2'); // Agrega margen izquierdo para separarlos
+                    btnModificar.type = 'button';
                     btnModificar.onclick = (event) => {
-                        // Lógica para modificar
-                        event.stopPropagation(); // Detener la propagación del evento
-                        const id = categoria.CategoriaID;
-                        // Agrega aquí tu lógica para modificar el registro con la ID 'id'
-                        return false; // Evitar recarga de la página
-                    };
+                        event.stopPropagation();
+                        const row = event.target.closest('tr');
+                        const checkbox = row.querySelector('input[type="checkbox"]');
 
-                    // Agregar botones al menú desplegable
-                    divDropdown.appendChild(btnEliminar);
-                    divDropdown.appendChild(btnModificar);
+                        if (checkbox && checkbox.checked) {
+                            // Mostrar el modal de edición
+                            const nombre = categoria.Nombre;
+                            $('#modalModificar').modal('show');
+                            document.getElementById('modalCategoriaID').textContent = nombre; // Mostrar el nombre en el modal
 
-                    // Agregar el botón "Acciones" al div de botones
-                    divBotones.appendChild(btnAccionesDropdown);
-                    divBotones.appendChild(divDropdown);
+                            document.getElementById('btnAceptarModificar').onclick = async () => {
+                                const nombreActual = document.getElementById('modalCategoriaID').textContent; // Obtén el nombre actual del elemento span
+                                const nuevoNombre = document.getElementById('txtinputNombre').value; // Obtén el nuevo nombre del input en el modal
 
-                    // Agregar el div de botones a la celda de Acciones
-                    cellAcciones.appendChild(divBotones);
+                                // Expresión regular para validar que el valor solo contenga letras
+                                const letrasRegex = /^[A-Za-z]+$/;
 
-                    // Evento click del botón "Acciones" para mostrar/ocultar el menú desplegable
-                    btnAccionesDropdown.onclick = (event) => {
-                        event.stopPropagation(); // Detener la propagación del evento
-                        if (divDropdown.style.display === 'none') {
-                            divDropdown.style.display = 'block';
+                                if (!nuevoNombre || !letrasRegex.test(nuevoNombre)) {
+                                    document.getElementById('errorEditar').textContent = 'El nombre no es válido.';
+                                    return; 
+                                }
+
+                                const requestBody = {
+                                    Nombre: nuevoNombre
+                                };
+
+                                const response = await fetch(`http://localhost:50912/api/Categorias/EditarCategoria?nombreActual=${nombreActual}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(requestBody)
+                                });
+
+                                if (response.status === 200) {
+                                    $('#modalModificar').modal('hide');
+                                    $('#modalModificar').on('hidden.bs.modal', function () {
+                                        window.location.reload(); 
+                                    });
+                                } else if (response.status === 409) {
+                                    document.getElementById('errorEditar').textContent = 'El nombre ya se encuentra en uso.';
+                                } else {
+                                    console.error('Error al editar la categoría');
+                                }
+                            };
                         } else {
-                            divDropdown.style.display = 'none';
+                            $('#modalAdvertencia').modal('show');
                         }
-                        return false; // Evitar recarga de la página
+
+                        return false;
                     };
+                    cellAcciones.appendChild(btnModificar);
                 });
             } else {
                 console.error('Error al cargar datos desde la API');
@@ -223,7 +275,6 @@
         }
     }
 
-    // Llamar a la función para cargar datos al cargar la página
     cargarDatosDesdeAPI();
 
 </script>
