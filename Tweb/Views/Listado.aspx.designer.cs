@@ -11,7 +11,7 @@ namespace Tweb.Views
 {
 
 
-    public partial class Platillos
+    public partial class Listado
     {
 
         /// <summary>

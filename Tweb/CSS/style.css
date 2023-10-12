@@ -48,3 +48,11 @@ button {
 
 
 
+/* Estilo para centrar registros en la tabla */
+.table tbody tr td {
+    text-align: center;
+}
+
+#tablaPlatillos tbody td {
+    text-align: center;
+}

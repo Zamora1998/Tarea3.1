@@ -106,27 +106,63 @@ namespace Tweb.Controllers
                 return InternalServerError();
             }
         }
+            [HttpGet]
+            [Route("api/Platillos/ListarPlatillos")]
+            // En el controlador de Platillos
+            public IHttpActionResult ListarPlatillos()
+            {
+                try
+                {
+                    var platillos = from p in Plati.Platillos
+                                    join c in Plati.Categorias on p.CategoriaID equals c.CategoriaID
+                                    join e in Plati.Estadoes on p.IDESTADO equals e.EstadoID
+                                    select new
+                                    {
+                                        PlatilloID = p.PlatilloID,
+                                        Nombre = p.Nombre,
+                                        Costo = p.Costo,
+                                        CategoriaNombre = c.Nombre,
+                                        EstadoDescripcion = e.Descripcion
+                                    };
+
+                    return Ok(platillos);
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
 
         [HttpGet]
-        [Route("api/Platillos/ListarPlatillos")]
-        public IHttpActionResult ListarPlatillos()
+        [Route("api/Platillos/ListarPlatillosPorCategoria")]
+        public IHttpActionResult ListarPlatillosPorCategoria(string categoriaDescripcion)
         {
             try
             {
-                var platillos = Plati.Platillos.ToList();
-
-                if (platillos.Count == 0)
-                {
-                    return NotFound();
-                }
+                var platillos = from p in Plati.Platillos
+                                join c in Plati.Categorias on p.CategoriaID equals c.CategoriaID
+                                join e in Plati.Estadoes on p.IDESTADO equals e.EstadoID
+                                where c.Nombre == categoriaDescripcion 
+                                select new
+                                {
+                                    PlatilloID = p.PlatilloID,
+                                    Nombre = p.Nombre,
+                                    Costo = p.Costo,
+                                    CategoriaNombre = c.Nombre,
+                                    EstadoDescripcion = e.Descripcion
+                                };
 
                 return Ok(platillos);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                return InternalServerError(ex);
             }
         }
+
+
+
+
 
     }
 }
