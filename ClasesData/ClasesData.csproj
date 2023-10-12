@@ -50,14 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Categoria.cs">
+    <Compile Include="Categorias.cs">
       <DependentUpon>Restaurante.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="Estado.cs">
       <DependentUpon>Restaurante.tt</DependentUpon>
     </Compile>
-    <Compile Include="Platillo.cs">
+    <Compile Include="Platillos.cs">
       <DependentUpon>Restaurante.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,34 +76,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Restaurante.edmx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="Restaurante.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Restaurante.Designer.cs</LastGenOutput>
-    </EntityDeploy>
+    <Compile Include="sysdiagrams.cs">
+      <DependentUpon>Restaurante.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
     <None Include="packages.config" />
+    <EntityDeploy Include="Restaurante.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Restaurante.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="Restaurante.edmx.diagram">
       <DependentUpon>Restaurante.edmx</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Restaurante.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Restaurante.Context.cs</LastGenOutput>
       <DependentUpon>Restaurante.edmx</DependentUpon>
+      <LastGenOutput>Restaurante.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Restaurante.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Restaurante.edmx</DependentUpon>
       <LastGenOutput>Restaurante.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

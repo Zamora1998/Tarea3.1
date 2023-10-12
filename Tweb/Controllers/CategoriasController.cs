@@ -32,7 +32,7 @@ namespace Tweb.Controllers
                 {
                     return Conflict();
                 }
-                var nuevaCategoriaEntity = new Categoria
+                var nuevaCategoriaEntity = new Categorias
                 {
                     Nombre = nuevaCategoria.Nombre
                 };
@@ -119,7 +119,5 @@ namespace Tweb.Controllers
                 return InternalServerError();
             }
         }
-
-
     }
 }

@@ -11,7 +11,7 @@ namespace Tweb.Views
 {
 
 
-    public partial class Categorias
+    public partial class Platillos
     {
 
         /// <summary>
@@ -24,36 +24,69 @@ namespace Tweb.Views
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Control btnAgregar.
+        /// Control nuevoPlatilloModal.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAgregar;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl nuevoPlatilloModal;
 
         /// <summary>
-        /// Control miModal.
+        /// Control nombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl miModal;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText nombre;
 
         /// <summary>
-        /// Control txtInputregistrar.
+        /// Control costo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtInputregistrar;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText costo;
 
         /// <summary>
-<<<<<<< Updated upstream
-        /// tablaCategorias control.
-=======
+        /// Control ddlcategoria.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlcategoria;
+
+        /// <summary>
+        /// Control ddlestado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlestado;
+
+        /// <summary>
+        /// Control errorMensaje.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl errorMensaje;
+
+        /// <summary>
+        /// Control btnGuardarPlatillo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardarPlatillo;
+
+        /// <summary>
         /// Control modalAdvertencia.
         /// </summary>
         /// <remarks>
@@ -63,40 +96,21 @@ namespace Tweb.Views
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl modalAdvertencia;
 
         /// <summary>
-        /// Control tablaCategorias.
->>>>>>> Stashed changes
+        /// Control ddleditarcategoria.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tablaCategorias;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddleditarcategoria;
 
         /// <summary>
-        /// Control thID.
+        /// Control ddleditarestado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TableHeaderCell thID;
-
-        /// <summary>
-        /// Control thNombre.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TableHeaderCell thNombre;
-
-        /// <summary>
-        /// Control thAcciones.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TableHeaderCell thAcciones;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddleditarestado;
     }
 }

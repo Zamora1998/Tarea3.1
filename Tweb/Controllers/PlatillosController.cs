@@ -32,7 +32,7 @@ namespace Tweb.Controllers
                     return Conflict();
                 }
 
-                var nuevoPlatillo = new Platillo
+                var nuevoPlatillo = new Platillos
                 {
                     Nombre = platilloNuevo.Nombre,
                     Costo = platilloNuevo.Costo,
@@ -50,18 +50,17 @@ namespace Tweb.Controllers
             catch (Exception)
             {
                 return InternalServerError();
-            }
-
+            } 
         }
 
         [HttpPut]
-        [Route("api/Platillos/EditarPlatillo/{nombre}")]
-        public IHttpActionResult EditarPlatillo(string nombre, Platillo platilloEditado)
+        [Route("api/Platillos/EditarPlatillo")]
+        public IHttpActionResult EditarPlatillo([FromUri] string nombreActual, [FromBody] Platillos platilloEditado)
         {
             try
             {
                 // Buscar el platillo por nombre
-                var platilloExistente = Plati.Platillos.FirstOrDefault(p => p.Nombre == nombre);
+                var platilloExistente = Plati.Platillos.FirstOrDefault(p => p.Nombre == nombreActual);
 
                 if (platilloExistente == null)
                 {
@@ -113,13 +112,23 @@ namespace Tweb.Controllers
         {
             try
             {
-                var platillos = Plati.Platillos.ToList();
-
+                var platillos = (from p in Plati.Platillos
+                                 join c in Plati.Categorias on p.CategoriaID equals c.CategoriaID
+                                 join e in Plati.Estado on p.IDESTADO equals e.EstadoID
+                                 select new
+                                 {
+                                     PlatilloID = p.PlatilloID,
+                                     Nombre = p.Nombre,
+                                     Costo = p.Costo,
+                                     CategoriaID = p.CategoriaID,  
+                                     CategoriaNombre = c.Nombre,  
+                                     EstadoID = p.IDESTADO,  
+                                     EstadoDescripcion = e.Descripcion  
+                                 }).ToList(); 
                 if (platillos.Count == 0)
                 {
                     return NotFound();
-                }
-
+                } 
                 return Ok(platillos);
             }
             catch (Exception)
@@ -128,5 +137,19 @@ namespace Tweb.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/Estados/ObtenerEstados")]
+        public IHttpActionResult ObtenerEstados()
+        {
+            try
+            {
+                var todosLosEstados = Plati.Estado.ToList();
+                return Ok(todosLosEstados);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
     }
 }

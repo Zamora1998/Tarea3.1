@@ -4,10 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="935d3b8ad4b34e888ba609bd513cfe63" Name="Diagram1">
-        <EntityTypeShape EntityType="RestauranteModel.Categoria" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+      <Diagram DiagramId="955c2f4d8af94897b263105f36989155" Name="Diagram1">
+        <EntityTypeShape EntityType="RestauranteModel.Categorias" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="RestauranteModel.Estado" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="RestauranteModel.Platillo" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="RestauranteModel.Platillos" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="RestauranteModel.sysdiagrams" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
         <AssociationConnector Association="RestauranteModel.FK__Platillos__Categ__3B75D760" ManuallyRouted="false" />
         <AssociationConnector Association="RestauranteModel.FK__Platillos__IDEST__3C69FB99" ManuallyRouted="false" />
       </Diagram>

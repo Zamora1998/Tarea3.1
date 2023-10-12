@@ -47,4 +47,8 @@ function mostrarMensaje(elemento, mensaje, recargarPagina) {
             location.reload();
         }
     }, 4000); 
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

@@ -29,6 +29,16 @@
           <Property Name="CategoriaID" Type="int" />
           <Property Name="IDESTADO" Type="int" />
         </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
         <Association Name="FK__Platillos__Categ__3B75D760">
           <End Role="Categorias" Type="Self.Categorias" Multiplicity="0..1" />
           <End Role="Platillos" Type="Self.Platillos" Multiplicity="*" />
@@ -57,6 +67,7 @@
           <EntitySet Name="Categorias" EntityType="Self.Categorias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Platillos" EntityType="Self.Platillos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Platillos__Categ__3B75D760" Association="Self.FK__Platillos__Categ__3B75D760">
             <End Role="Categorias" EntitySet="Categorias" />
             <End Role="Platillos" EntitySet="Platillos" />
@@ -71,7 +82,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RestauranteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Categoria">
+        <EntityType Name="Categorias">
           <Key>
             <PropertyRef Name="CategoriaID" />
           </Key>
@@ -87,7 +98,7 @@
           <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Platillos" Relationship="Self.FK__Platillos__IDEST__3C69FB99" FromRole="Estado" ToRole="Platillos" />
         </EntityType>
-        <EntityType Name="Platillo">
+        <EntityType Name="Platillos">
           <Key>
             <PropertyRef Name="PlatilloID" />
           </Key>
@@ -96,12 +107,22 @@
           <Property Name="Costo" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="CategoriaID" Type="Int32" />
           <Property Name="IDESTADO" Type="Int32" />
-          <NavigationProperty Name="Categoria" Relationship="Self.FK__Platillos__Categ__3B75D760" FromRole="Platillos" ToRole="Categorias" />
+          <NavigationProperty Name="Categorias" Relationship="Self.FK__Platillos__Categ__3B75D760" FromRole="Platillos" ToRole="Categorias" />
           <NavigationProperty Name="Estado" Relationship="Self.FK__Platillos__IDEST__3C69FB99" FromRole="Platillos" ToRole="Estado" />
         </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
         <Association Name="FK__Platillos__Categ__3B75D760">
-          <End Role="Categorias" Type="Self.Categoria" Multiplicity="0..1" />
-          <End Role="Platillos" Type="Self.Platillo" Multiplicity="*" />
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="0..1" />
+          <End Role="Platillos" Type="Self.Platillos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Categorias">
               <PropertyRef Name="CategoriaID" />
@@ -113,7 +134,7 @@
         </Association>
         <Association Name="FK__Platillos__IDEST__3C69FB99">
           <End Role="Estado" Type="Self.Estado" Multiplicity="0..1" />
-          <End Role="Platillos" Type="Self.Platillo" Multiplicity="*" />
+          <End Role="Platillos" Type="Self.Platillos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Estado">
               <PropertyRef Name="EstadoID" />
@@ -123,16 +144,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="RestauranteEntities" annotation:LazyLoadingEnabled="false">
-          <EntitySet Name="Categorias" EntityType="Self.Categoria" />
-          <EntitySet Name="Estadoes" EntityType="Self.Estado" />
-          <EntitySet Name="Platillos" EntityType="Self.Platillo" />
+        <EntityContainer Name="RestauranteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" />
+          <EntitySet Name="Estado" EntityType="Self.Estado" />
+          <EntitySet Name="Platillos" EntityType="Self.Platillos" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <AssociationSet Name="FK__Platillos__Categ__3B75D760" Association="Self.FK__Platillos__Categ__3B75D760">
             <End Role="Categorias" EntitySet="Categorias" />
             <End Role="Platillos" EntitySet="Platillos" />
           </AssociationSet>
           <AssociationSet Name="FK__Platillos__IDEST__3C69FB99" Association="Self.FK__Platillos__IDEST__3C69FB99">
-            <End Role="Estado" EntitySet="Estadoes" />
+            <End Role="Estado" EntitySet="Estado" />
             <End Role="Platillos" EntitySet="Platillos" />
           </AssociationSet>
         </EntityContainer>
@@ -143,14 +165,14 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="RestauranteModelStoreContainer" CdmEntityContainer="RestauranteEntities">
           <EntitySetMapping Name="Categorias">
-            <EntityTypeMapping TypeName="RestauranteModel.Categoria">
+            <EntityTypeMapping TypeName="RestauranteModel.Categorias">
               <MappingFragment StoreEntitySet="Categorias">
                 <ScalarProperty Name="CategoriaID" ColumnName="CategoriaID" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Estadoes">
+          <EntitySetMapping Name="Estado">
             <EntityTypeMapping TypeName="RestauranteModel.Estado">
               <MappingFragment StoreEntitySet="Estado">
                 <ScalarProperty Name="EstadoID" ColumnName="EstadoID" />
@@ -159,13 +181,24 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Platillos">
-            <EntityTypeMapping TypeName="RestauranteModel.Platillo">
+            <EntityTypeMapping TypeName="RestauranteModel.Platillos">
               <MappingFragment StoreEntitySet="Platillos">
                 <ScalarProperty Name="PlatilloID" ColumnName="PlatilloID" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Costo" ColumnName="Costo" />
                 <ScalarProperty Name="CategoriaID" ColumnName="CategoriaID" />
                 <ScalarProperty Name="IDESTADO" ColumnName="IDESTADO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="RestauranteModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -183,10 +216,10 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
