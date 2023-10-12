@@ -1,6 +1,9 @@
 ﻿using ClasesData;
+using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,33 +28,42 @@ namespace Tweb.Controllers
         {
             try
             {
-                var platilloExistente = Plati.Platillos.FirstOrDefault(p => p.Nombre == platilloNuevo.Nombre);
-
-                if (platilloExistente != null)
+                using (IDbConnection connection = Plati.Database.Connection) // Reemplaza con tu cadena de conexión.
                 {
-                    return Conflict();
+                    connection.Open();
+
+                    // Verifica si el platillo ya existe en la base de datos.
+                    var platilloExistente = connection.Query<Platillo>("SELECT * FROM Platillos WHERE Nombre = @Nombre", new { platilloNuevo.Nombre }).FirstOrDefault();
+
+                    if (platilloExistente != null)
+                    {
+                        return Conflict();
+                    }
+
+                    // Utiliza Dapper para insertar el nuevo platillo en la base de datos.
+                    var nuevoPlatillo = new Platillo
+                    {
+                        Nombre = platilloNuevo.Nombre,
+                        Costo = platilloNuevo.Costo,
+                        CategoriaID = platilloNuevo.CategoriaID,
+                        IDESTADO = platilloNuevo.IDESTADO
+                    };
+
+                    // Realiza la inserción en la base de datos.
+                    connection.Execute("INSERT INTO Platillos (Nombre, Costo, CategoriaID, IDESTADO) VALUES (@Nombre, @Costo, @CategoriaID, @IDESTADO)", nuevoPlatillo);
+
+                    // Obtiene la ID del nuevo platillo insertado.
+                    var nuevaId = connection.ExecuteScalar<int>("SELECT SCOPE_IDENTITY()");
+
+                    var requestUri = Request.RequestUri;
+                    var newResourceUrl = new Uri(requestUri, $"api/Platillos/RegistrarPlatillo/{nuevaId}");
+                    return Created(newResourceUrl, "R");
                 }
-
-                var nuevoPlatillo = new Platillo
-                {
-                    Nombre = platilloNuevo.Nombre,
-                    Costo = platilloNuevo.Costo,
-                    CategoriaID = platilloNuevo.CategoriaID,
-                    IDESTADO = platilloNuevo.IDESTADO
-                };
-
-                Plati.Platillos.Add(nuevoPlatillo);
-                Plati.SaveChanges();
-
-                var requestUri = Request.RequestUri;
-                var newResourceUrl = new Uri(requestUri, $"api/Platillos/RegistrarPlatillo/{nuevoPlatillo.PlatilloID}");
-                return Created(newResourceUrl, "R");
             }
             catch (Exception)
             {
                 return InternalServerError();
             }
-
         }
 
         [HttpPut]
@@ -60,22 +72,29 @@ namespace Tweb.Controllers
         {
             try
             {
-                // Buscar el platillo por nombre
-                var platilloExistente = Plati.Platillos.FirstOrDefault(p => p.Nombre == nombre);
-
-                if (platilloExistente == null)
+                using (IDbConnection connection = Plati.Database.Connection) // Reemplaza con tu cadena de conexión.
                 {
-                    return NotFound();
+                    connection.Open();
+
+                    // Busca el platillo por nombre.
+                    var platilloExistente = connection.Query<Platillo>("SELECT * FROM Platillos WHERE Nombre = @Nombre", new { Nombre = nombre }).FirstOrDefault();
+
+                    if (platilloExistente == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Actualiza los datos del platillo con los nuevos valores recibidos.
+                    platilloExistente.Nombre = platilloEditado.Nombre;
+                    platilloExistente.Costo = platilloEditado.Costo;
+                    platilloExistente.CategoriaID = platilloEditado.CategoriaID;
+                    platilloExistente.IDESTADO = platilloEditado.IDESTADO;
+
+                    // Utiliza Dapper para ejecutar la consulta de actualización.
+                    connection.Execute("UPDATE Platillos SET Nombre = @Nombre, Costo = @Costo, CategoriaID = @CategoriaID, IDESTADO = @IDESTADO WHERE PlatilloID = @PlatilloID", platilloExistente);
+
+                    return Ok("R");
                 }
-
-                platilloExistente.Nombre = platilloEditado.Nombre;
-                platilloExistente.Costo = platilloEditado.Costo;
-                platilloExistente.CategoriaID = platilloEditado.CategoriaID;
-                platilloExistente.IDESTADO = platilloEditado.IDESTADO;
-
-                Plati.SaveChanges();
-
-                return Ok("R");
             }
             catch (Exception)
             {
@@ -89,15 +108,21 @@ namespace Tweb.Controllers
         {
             try
             {
-                var platilloExistente = Plati.Platillos.FirstOrDefault(p => p.Nombre == nombre);
-
-                if (platilloExistente == null)
+                using (IDbConnection connection = Plati.Database.Connection) // Reemplaza con tu cadena de conexión.
                 {
-                    return NotFound();
-                }
+                    connection.Open();
 
-                Plati.Platillos.Remove(platilloExistente);
-                Plati.SaveChanges();
+                    // Busca el platillo por nombre.
+                    var platilloExistente = connection.Query<Platillo>("SELECT * FROM Platillos WHERE Nombre = @Nombre", new { Nombre = nombre }).FirstOrDefault();
+
+                    if (platilloExistente == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Utiliza Dapper para ejecutar la consulta de eliminación.
+                    connection.Execute("DELETE FROM Platillos WHERE PlatilloID = @PlatilloID", new { PlatilloID = platilloExistente.PlatilloID });
+                }
 
                 return Ok("R");
             }
@@ -106,7 +131,8 @@ namespace Tweb.Controllers
                 return InternalServerError();
             }
         }
-            [HttpGet]
+
+        [HttpGet]
             [Route("api/Platillos/ListarPlatillos")]
             // En el controlador de Platillos
             public IHttpActionResult ListarPlatillos()
@@ -132,34 +158,6 @@ namespace Tweb.Controllers
                     return InternalServerError(ex);
                 }
             }
-
-        [HttpGet]
-        [Route("api/Platillos/ListarPlatillosPorCategoria")]
-        public IHttpActionResult ListarPlatillosPorCategoria(string categoriaDescripcion)
-        {
-            try
-            {
-                var platillos = from p in Plati.Platillos
-                                join c in Plati.Categorias on p.CategoriaID equals c.CategoriaID
-                                join e in Plati.Estadoes on p.IDESTADO equals e.EstadoID
-                                where c.Nombre == categoriaDescripcion 
-                                select new
-                                {
-                                    PlatilloID = p.PlatilloID,
-                                    Nombre = p.Nombre,
-                                    Costo = p.Costo,
-                                    CategoriaNombre = c.Nombre,
-                                    EstadoDescripcion = e.Descripcion
-                                };
-
-                return Ok(platillos);
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
-
 
 
 
